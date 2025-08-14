@@ -30,7 +30,7 @@ const fs = (() => {
   const data = {
     "/": { type: "dir", children: ["home"] },
     "/home": { type: "dir", children: ["about.txt","projects","contact.txt","skills.txt"] },
-    "/home/projects": { type: "dir", children: ["terminal-portfolio.txt","data-viz-lab.txt"] },
+    "/home/projects": { type: "dir", children: ["not_yet_added.py"] },
     "/home/about.txt": {
       type: "file",
       content: [
@@ -183,11 +183,13 @@ const term = (() => {
       <div class="line1">Well...</div>
       <div class="line2">Now What?</div>
       <div class="actions" role="group" aria-label="Choices">
-        <button class="btn btn-red" data-action="create-life">Create Life</button>
+        
         <button class="btn btn-blue" data-action="reopen">Go back to the Terminal</button>
       </div>
     </div>
   `;
+
+  // <button class="btn btn-red" data-action="create-life">Create Life</button>
   host.appendChild(panel);
 
   panel.querySelector('[data-action="reopen"]').addEventListener("click", () => {
