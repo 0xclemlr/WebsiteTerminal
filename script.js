@@ -601,8 +601,9 @@ function startMatrixRain(){
 
     outResizeObs = new ResizeObserver(() => { forceScroll(); syncTitlebarPadding(); });
     outResizeObs.observe(out);
-
+    window.addEventListener("resize", syncTitlebarPadding);
     syncTitlebarPadding();
+
   }
 
   function unbindInput(){
@@ -610,6 +611,8 @@ function startMatrixRain(){
     if (onGhostInput) ghost.removeEventListener("input", onGhostInput);
     if (onGhostKeydown) ghost.removeEventListener("keydown", onGhostKeydown);
     if (outResizeObs) outResizeObs.disconnect();
+    window.removeEventListener("resize", syncTitlebarPadding);
+
   }
 
   function autocomplete(){
