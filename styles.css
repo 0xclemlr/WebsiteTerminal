@@ -1,0 +1,207 @@
+:root{
+  --bg:#0c0c0c;
+  --surface:#0a0a0a;
+  --surface-2:#0f0f0f;
+  --title-top:#1f1f1f;
+  --title-bottom:#181818;
+  --border:#2a2a2a;
+  --text:#e6e6e6;
+  --muted:#9aa0a6;
+  --accent:#3ea6ff;
+  --danger:#e81123;
+  --hover:rgba(255,255,255,.06);
+  --scroll-thumb:rgba(255,255,255,.12);
+  --radius:10px;
+  --mono:Consolas,"Cascadia Mono","Courier New",ui-monospace,monospace;
+}
+[data-theme="light"]{
+  --bg:#f5f5f5;
+  --surface:#ffffff;
+  --surface-2:#f6f6f6;
+  --title-top:#ececec;
+  --title-bottom:#e2e2e2;
+  --border:#d9d9d9;
+  --text:#0c0c0c;
+  --muted:#4a5560;
+  --accent:#005fb8;
+  --danger:#b00020;
+  --hover:rgba(0,0,0,.06);
+  --scroll-thumb:rgba(0,0,0,.12);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--mono)}
+.desktop{min-height:100dvh;display:grid;place-items:center;padding:24px}
+
+.window{
+  width:920px;
+  height:520px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:0 10px 36px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-rows:38px minmax(0,1fr); /* critical: 0-min for the content row */
+  overflow:hidden; /* keep titlebar fixed; scrolling happens in #output */
+}
+
+/* hidden state for closed window */
+.window.closed{ display:none; }
+
+/* Matrix rain behind the window */
+.window{ position:relative; z-index:2;}
+.titlebar, #terminal{ position:relative; z-index:2; }
+
+/* Desktop (terminal wrapper) stays above the background */
+.desktop{
+  position:relative;
+  z-index:10;               /* higher than the rain */
+  min-height:100dvh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+
+/* The matrix canvas is a true page background */
+.matrix-canvas{
+  position:fixed;
+  inset:0;
+  z-index:0;                /* below .desktop */
+  pointer-events:none;
+  opacity:.65;
+}
+
+/* You don't need extra z-indexes here; remove them if present */
+.window{ position:relative; /* z-index:auto */ }
+.titlebar, #terminal{ position:relative; /* no z-index */ }
+
+
+.titlebar{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  background:linear-gradient(180deg,var(--title-top),var(--title-bottom));
+  border-bottom:1px solid var(--border);
+  padding:0 16px; /* left aligns with #output’s 16px padding; right is synced via JS */
+  user-select:none;
+}
+.title-left{display:flex;align-items:center;gap:8px}
+.app-icon{width:16px;height:16px;border-radius:3px;background:var(--accent)}
+.caption{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.caption-controls{display:grid;grid-auto-flow:column;gap:2px}
+.caption-controls button{width:46px;height:30px;border:0;background:transparent;color:var(--text);font:16px/1 var(--mono);border-radius:6px}
+.caption-controls button:hover{background:var(--hover)}
+.caption-controls button:last-child:hover{background:var(--danger);color:#fff}
+
+#terminal{
+  display:grid;
+  grid-template-rows:minmax(0,1fr); /* allow child to shrink */
+  min-height:0;                      /* critical: let #output scroll */
+}
+
+#output{
+  min-height:0;   /* critical: enable scrolling inside grid */
+  height:100%;
+  padding:14px 16px;
+  overflow:auto;  /* vertical + horizontal when needed */
+  white-space:pre-wrap;
+  word-break:break-word;
+  font-size:14px;
+  line-height:1.35;
+}
+
+/* post-close panel */
+.post-close{
+  width:920px;
+  height:520px;
+  background:var(--surface);
+  border:0px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:0 10px 36px rgba(0,0,0,.55);
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+.post-close .inner{ display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center }
+.post-close .line1{ font-size:28px; opacity:0; animation:fadeUp .5s ease forwards .0s }
+.post-close .line2{ font-size:22px; opacity:0; animation:fadeUp .5s ease forwards .6s }
+.post-close .actions{ display:flex; gap:12px; opacity:0; animation:fadeUp .5s ease forwards 1.2s }
+
+.btn{ padding:10px 16px; border:1px solid var(--border); border-radius:8px; font:14px/1 var(--mono); cursor:pointer }
+.btn-red{ background:var(--danger); color:#fff; border-color:transparent }
+.btn-blue{ background:var(--accent); color:#fff; border-color:transparent }
+.btn:hover{ filter:brightness(1.08) }
+.btn:active{ transform:translateY(1px) }
+
+@keyframes fadeUp{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
+
+
+/* optional: maximized + minimized states */
+.window.maximized{ width:calc(100vw - 48px); height:calc(100vh - 48px); }
+.window.minimized #terminal{ display:none; }
+
+.line{margin:0 0 6px 0}
+.line .muted{color:var(--muted)}
+.line .danger{color:var(--danger)}
+pre.block{
+  margin:8px 0 10px;
+  padding:10px 12px;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow-x:auto;
+}
+
+.input-line{display:block}
+.prompt{white-space:pre}
+.typed{white-space:pre}
+.caret{display:inline;animation:blink 1s steps(1,end) infinite}
+@keyframes blink{50%{opacity:0}}
+
+#ghost{
+  position:absolute;
+  opacity:0;
+  width:1px;
+  height:1px;
+  pointer-events:none;
+}
+
+body.matrix{background:linear-gradient(180deg,rgba(0,20,0,.85),rgba(0,0,0,.95))}
+
+::-webkit-scrollbar{width:12px;height:12px}
+::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.2)}
+
+.banner-anim{
+  margin:8px 0 10px;
+  padding:10px 12px;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow-x:auto;
+  white-space:pre;
+  font-family:var(--mono);
+  line-height:1.15;
+}
+
+.flame{ text-shadow:0 0 8px currentColor,0 0 14px currentColor }
+
+.heat0{ color:#ffe08a }
+.heat1{ color:#ff9f43 }
+.heat2{ color:#ef5350 }
+
+/* Full-page Life canvas (above matrix background, below UI) */
+.life-full{
+  position:fixed;
+  inset:0;
+  z-index:5;             /* matrix is 0, .desktop is 10 */
+  background:#000;       /* hides the matrix while Life runs */
+  display:block;
+}
+
+.life-root{display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;width:100%;height:100%}
+.life-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}
+.life-toolbar .group{display:flex;gap:8px;align-items:center}
+.life-toolbar label{font-size:12px;opacity:.8}
+.life-canvas{width:100%;height:100%;background:#000;border:1px solid var(--border);border-radius:8px}
+input[type="range"].life{width:160px;accent-color:var(--accent)}

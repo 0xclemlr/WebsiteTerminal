@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Command Prompt</title>
+  <meta name="color-scheme" content="dark light" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="desktop">
+    <section class="window" aria-label="Command Prompt">
+      <header class="titlebar">
+        <div class="title-left">
+          <div class="app-icon" aria-hidden="true"></div>
+          <div class="caption">Command Prompt</div>
+        </div>
+        <div class="caption-controls">
+          <button type="button" data-action="minimize">—</button>
+          <button type="button" data-action="toggle-size">□</button>
+          <button type="button" data-action="close">✕</button>
+        </div>
+      </header>
+
+
+
+      <section id="terminal" role="application" aria-label="Terminal">
+        <div id="output" aria-live="polite"></div>
+        <input id="ghost" type="text" autocomplete="off" spellcheck="false" aria-label="Input" />
+      </section>
+    </section>
+  </main>
+  <script src="script.js" defer></script>
+</body>
+</html>
