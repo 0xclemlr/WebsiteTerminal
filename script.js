@@ -405,7 +405,7 @@ function startMatrixRain(){
       "  cd [path]           Change directory",
       "  type <file>         Show file",
       "  cls                 Clear screen",
-      "  banner [stop]       Animated ASCII banner (1 update/sec)",
+      "  banner [stop]       ASCII banner",
       "  echo ...            Print text",
       "  whoami              Show owner",
       "  theme [name]        Switch theme (dark|light|matrix)",
